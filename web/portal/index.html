@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="/common/layui/css/layui.css">
+
+</head>
+<body>
+    <ul class="layui-nav">
+        <li class="layui-nav-item layui-this"><a href="">首页</a></li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">主题</a>
+            <dl class="layui-nav-child">
+                <dd><a href="">技术</a></dd>
+                <dd><a href="">体育</a></dd>
+                <dd><a href="">羞羞答答</a></dd>
+            </dl>
+        </li>
+        <li class="layui-nav-item"><a href="">公告</a></li>
+        <li class="layui-nav-item"><a href="">社区</a></li>
+    </ul>
+
+    <div class="layui-carousel" id="test1">
+        <div carousel-item>
+            <!--<div><img src="../common/Static/img/banner1.jpg" height="290" width="100%"/></div>
+            <div><img src="../common/Static/img/banner2.jpg" height="290" width="100%"/></div>
+            <div><img src="../common/Static/img/banner3.jpg" height="290" width="100%"/></div>
+            <div><img src="../common/Static/img/banner4.jpg" height="290" width="100%"/></div>-->
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div id="title11">11111111111111</div>
+    <div class="layui-row" id="demo">
+    </div>
+
+    <script src="/common/layui/layui.js"></script>
+    <script>
+       layui.config({
+            base: '/common/Weight/' //假设这是你存放拓展模块的根目录
+        }).extend({ //设定模块别名
+            CtpCommon: 'CtpCommon' //如果 mymod.js 是在根目录，也可以不用设定别名
+        });
+
+        layui.use(['jquery', 'element','carousel','flow','layer','CtpCommon'], function(){
+            var $ = layui.$; //重点处
+            var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+            var carousel = layui.carousel;
+            var layer = layui.layer; //独立版的layer无需执行这一句
+            var CtpCommon = layui.CtpCommon;
+            var flow = layui.flow;
+            //监听导航点击
+            element.on('nav(demo)', function(elem){
+                //console.log(elem)
+                layer.msg(elem.text());
+            });
+
+            //建造实例
+            carousel.render({
+                elem: '#test1'
+                ,width: '100%' //设置容器宽度
+                ,arrow: 'always' //始终显示箭头
+                //,anim: 'updown' //切换动画方式
+            });
+
+            //流加载
+            flow.load({
+                elem: '#demo' //指定列表容器
+                ,done: function(page, next){ //到达临界点（默认滚动触发），触发下一页
+                    var lis = [];
+                    var data = {"list":[{"title":"1"},{"title":"2"},{"title":"1"},{"title":"2"}],"pages":"10"}
+                    layui.each(data.list, function(index, item){
+                        lis.push('<div class="layui-col-md3"><img src="../common/Static/img/1.JPG" height="30" width="30"/></div>');
+                    });
+                    next(lis.join(''), page < data.pages);
+                }
+            });
+
+            //链接后台示范例子
+            $("#title11").click(function(){
+                layer.msg('sssss');
+                CtpCommon.CallService('/login',null,"get",true).done(function (data) {
+                    $("#title11").html(data.username+"--------------------------");
+                });
+            })
+
+        });
+    </script>
+</body>
+</html>
